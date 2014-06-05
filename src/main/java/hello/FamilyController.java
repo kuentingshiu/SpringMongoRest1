@@ -1,11 +1,14 @@
 package hello;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mongodb.WriteResult;
@@ -16,11 +19,60 @@ public class FamilyController {
 	@Autowired
 	private FamilyRepositoryCustom myFamily;
 
+//	REST API: /families
+//	HTTP verb: GET
+	@RequestMapping(value = "/families", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public FamilyWrapper FindFamilies() {
+		
+		try {
+			return myFamily.GetFamilies();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Error : unable to query Families.");
+			return null;
+		}
+	}
+
+//	REST API: /items
+//	HTTP verb: GET
+	@RequestMapping(value = "/items", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ItemWrapper FindItems() {
+		
+		try {
+			return myFamily.GetItems();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Error : unable to query Families.");
+			return null;
+		}
+	}	
+	
+//	REST API: /activities
+//	HTTP verb: GET
+	@RequestMapping(value = "/activities", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ActivityWrapper FindActivities() {
+		
+		try {
+			return myFamily.GetActivities();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Error : unable to query Families.");
+			return null;
+		}
+	}
+	
+	
 //	REST API: /family/id
 //	HTTP verb: GET
-	@RequestMapping(value = "/family/{id}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/families/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public Family FindByFamilyId(@PathVariable("id") int id) {
+	public SingleFamilyWrapper FindByFamilyId(@PathVariable("id") int id) {
 		
 		try {
 			return myFamily.GetFamilyById(id);
@@ -52,9 +104,9 @@ public class FamilyController {
 	
 //	REST API: /family/id/edit
 //	HTTP verb: GET
-	@RequestMapping(value = "/family/{id}/edit", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/families/{id}/edit", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public Family FindByFamilyEditId(@PathVariable("id") int id) {
+	public SingleFamilyWrapper FindByFamilyEditId(@PathVariable("id") int id) {
 		
 		try {
 			return myFamily.GetFamilyByIdEdit(id);
@@ -68,7 +120,7 @@ public class FamilyController {
 	
 //	REST API: /family/id/edit
 //	HTTP verb: POST	
-	@RequestMapping(value = "/family/{id}/edit", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/families/{id}/edit", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public Status UpdateFamily(@PathVariable("id") int id, @RequestBody Family newFamily) {
 		
@@ -86,7 +138,7 @@ public class FamilyController {
 	
 //	REST API: /family/id/addperson
 //	HTTP verb: PUT
-	@RequestMapping(value = "/family/{familyId}/addPerson", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/families/{familyId}/addPerson", method = RequestMethod.PUT, produces = "application/json")
 	@ResponseBody
 	public Status AddPerson(@PathVariable("familyId") int familyId, @RequestBody User newUser) {
 		try {
@@ -103,7 +155,7 @@ public class FamilyController {
 	
 //	REST API: /family/id/person/id/edit
 //	HTTP verb: GET	
-	@RequestMapping (value = "/family/{familyId}/person/{userId}/edit", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping (value = "/families/{familyId}/person/{userId}/edit", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public User GetUserByFamilyIdAndPersonId(@PathVariable("familyId") int familyId, @PathVariable("userId") int userId) {
 		
@@ -119,7 +171,7 @@ public class FamilyController {
 	
 //	REST API: /family/id/person/id/edit
 //	HTTP verb: POST		
-	@RequestMapping (value = "/family/{familyId}/person/{userId}/edit", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping (value = "/families/{familyId}/person/{userId}/edit", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public Status UpdateUserByFamilyIdAndPersonId(@PathVariable ("familyId") int familyId, 
 												  @PathVariable ("userId") int userId, 
@@ -145,7 +197,7 @@ public class FamilyController {
 	
 //	REST API: family/id/person/id/delete
 //	HTTP verb: DELETE	
-	@RequestMapping (value = "/family/{familyId}/person/{userId}/delete", method = RequestMethod.DELETE, produces = "application/json")
+	@RequestMapping (value = "/families/{familyId}/person/{userId}/delete", method = RequestMethod.DELETE, produces = "application/json")
 	@ResponseBody
 	public Status DeleteUserByFamilyIdAndPersonId(@PathVariable("familyId") int familyId, @PathVariable("userId")int userId) {
 		
@@ -158,7 +210,163 @@ public class FamilyController {
 
 	}
 	
-// REST API : /family/searchfamily/...
-// Parameters : fromAge, toAge,languages
+// REST API : /family/searchfamily/languages=chinese&fromAge=2&toAge=5
 // HTTP verb: GET		
+	@RequestMapping (value = "/families/searchfamily", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public FamilyWrapper SearchFamily(@RequestParam(value = "languages") String languages, 
+								     @RequestParam(value = "fromAge") int fromAge, 
+								     @RequestParam(value = "toAge") int toAge) {
+		
+		try {
+			return myFamily.SearchFamily(languages,fromAge, toAge);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Error : unable to view Families.");
+			return null;
+		}		
+	}
+	
+	
+	
+// 	REST API: /user/id/additem
+// 	HTTP verb: PUT
+	@RequestMapping(value = "/user/{userFacebookId}/additem", method = RequestMethod.PUT, produces = "application/json")
+	@ResponseBody
+	public Status AddItem (@PathVariable("userFacebookId") String userFacebookId, @RequestBody Item newItem) {
+		
+		WriteResult wr = myFamily.AddItem(userFacebookId, newItem);
+		
+		if (wr.getError() == null)
+			return new Status("201");
+		else
+			return new Status("Unable to add item");
+	}			
+	
+//	REST API: /user/userFacebookId/edititem
+//	HTTP verb: POST
+	@RequestMapping(value = "/user/{userFacebookId}/edititem", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public Status EditItem (@PathVariable("userFacebookId") String userFacebookId, @RequestBody Item newItem) {
+		
+		WriteResult wr = myFamily.EditItem(userFacebookId, newItem);
+		
+		if (wr.getError() == null)
+			return new Status("200");
+		else
+			return new Status("Unable to edit item");
+	}	
+	
+//	REST API: /user/id/items?status=xx&type=yy
+//	HTTP verb: GET
+	@RequestMapping(value="/user/{userFacebookId}/items", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody ItemWrapper getItems(@PathVariable("userFacebookId") String userFacebookId,
+											 @RequestParam (value="status", required=false) String status,
+											 @RequestParam (value="type", required=false) String type
+											) {
+		return myFamily.getItem(userFacebookId, status, type);
+	}
+	
+//	REST API: /user/id/deleteitem
+//	HTTP verb: DELETE	
+	@RequestMapping(value = "/user/{userFacebookId}/deleteitem", method = RequestMethod.DELETE, produces = "application/json")
+	@ResponseBody	
+	public Status DeleteItem(@PathVariable("userFacebookId") String userFacebookId, @RequestBody Item deleteItem) {
+		
+		WriteResult wr = myFamily.DeleteItem(userFacebookId, deleteItem);
+		if (wr.getError() == null)
+			return new Status("200");
+		else
+			return new Status("Unable to delete item");
+	}
+										
+//	REST API: /transaction
+//	HTTP verb: PUT
+	@RequestMapping(value = "/transaction", method = RequestMethod.PUT, produces = "application/json")
+	@ResponseBody
+	public Status userTransaction(@RequestBody Transaction transaction)
+	{
+		try {
+			myFamily.userTransaction(transaction);
+			return new Status("201");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Error : unable to save the transaction.");
+			return new Status("Unable to save the transaction");
+		}
+		
+	}
+	
+//	REST API: /user/id/transaction
+//	HTTP verb: GET	
+	@RequestMapping(value = "/user/{userId}/transaction", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public List<Transaction> getTransaction(@PathVariable("userId") String userId) {
+		
+		try {
+			return myFamily.getTransaction(userId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Error : unable to query transaction.");
+			return null;
+		}
+	}
+	
+	//REST API: /activity
+	//HTTP verb: PUT
+	@RequestMapping(value = "/activities", method = RequestMethod.PUT, produces = "application/json")
+	@ResponseBody
+	public Status AddActivity(@RequestBody Activity activity)
+	{
+		try {
+			myFamily.AddActivity(activity);
+			return new Status("201");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Error : unable to add the activity.");
+			return new Status("Unable to add the activity.");
+		}
+		
+	}	
+	
+	//	REST API: /activity
+	//	HTTP verb: POST
+	@RequestMapping(value = "/activities", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public Status EditActivity (@RequestBody Activity updatedActivity) {
+		
+		WriteResult wr = myFamily.EditActivity(updatedActivity);
+		
+		if (wr.getError() == null)
+			return new Status("200");
+		else
+			return new Status("Unable to edit item");
+	}
+	
+	//	REST API: /activity
+	//	HTTP verb: DELETE
+	@RequestMapping(value = "/activities", method = RequestMethod.DELETE, produces = "application/json")
+	@ResponseBody
+	public Status DeleteActivity (@RequestBody Activity deletedActivity) {
+		
+		try {
+			myFamily.DeleteActivity(deletedActivity);
+			return new Status("200");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Error : unable to delete the activity.");
+			return new Status("Unable to delete the activity.");
+		}
+	}	
+	
+	//	REST API: /activity?location=48105&type=2&fromdate=2014-1-1&todate=2014-1-3
+	//	HTTP verb: GET
+	
+	
 }
+

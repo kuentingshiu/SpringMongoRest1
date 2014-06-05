@@ -11,7 +11,7 @@ public class MyConfig extends AbstractMongoConfiguration {
 
 	@Override
 	public String getDatabaseName() {
-		return "mydb";
+		return "mydb2";
 	}
 
 	@Override

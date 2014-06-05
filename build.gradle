@@ -12,9 +12,15 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'war'
+
+war {
+	baseName = 'RestMongoVer3'
+	version =  '0.1.0'
+}
 
 jar {
-    baseName = 'gs-accessing-mongodb-data-rest'
+    baseName = 'RestMongoVer3'
     version =  '0.1.0'
 }
 

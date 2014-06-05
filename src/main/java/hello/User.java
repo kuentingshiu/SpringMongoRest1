@@ -23,21 +23,22 @@ public class User {
 	private String nickName;
 	private String email;
 	private Date birthday;
-	private List<String> languages;
+	private List<String> languages = new ArrayList<String>();
 	private int type;
 	private String gender;
 	private String avatarUrl;
 	private String familyId;
 	private Date createdDate;
+	private List<Item> items = new ArrayList<Item>();
 	
 	public User() {
 		_id = new ObjectId();
 	}
 	
-//	public void set_Id(ObjectId _id) {
-//		this._id = _id;
-//	}
-	
+	public void set_id(String _id) {
+		this._id = ObjectId.massageToObjectId(_id);
+	}
+
 	public String get_id() {
 		return _id.toString();
 	}
@@ -162,4 +163,13 @@ public class User {
 		}
 	}
 
+	public List<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Item> items) {
+		this.items = items;
+	}
+
+	
 }

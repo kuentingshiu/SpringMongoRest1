@@ -9,13 +9,25 @@ import com.mongodb.WriteResult;
 @Service
 public interface FamilyRepositoryCustom {
 
+//	REST API: /activities
+//	HTTP verb: GET
+	public ActivityWrapper GetActivities() throws Exception;		
+	
+//	REST API: /items
+//	HTTP verb: GET
+	public ItemWrapper GetItems() throws Exception;	
+	
+//	REST API: /families
+//	HTTP verb: GET
+	public FamilyWrapper GetFamilies() throws Exception;
+	
 //	REST API: /family/id
 //	HTTP verb: GET
-	public Family GetFamilyById(int id) throws Exception;
+	public SingleFamilyWrapper GetFamilyById(int id) throws Exception;
 	
 //	REST API: /family/id/edit
 //	HTTP verb: GET	
-	public Family GetFamilyByIdEdit(int id) throws Exception;	
+	public SingleFamilyWrapper GetFamilyByIdEdit(int id) throws Exception;	
 
 //	REST API: /addfamily
 //	HTTP verb: PUT
@@ -41,8 +53,49 @@ public interface FamilyRepositoryCustom {
 //	HTTP verb: DELETE
 	public WriteResult DeletePersonByFamilyIdAndUserId(int familyId, int userId);
 	
-// REST API : /family/searchfamily/...
-// Parameters : fromAge, toAge,languages
+// REST API : /family/searchfamily/languages=chinese&fromAge=2&toAge=5
 // HTTP verb: GET		
-	//public List<Family> SearchFamily1(int fromAge, int toAge, String language);
+	public FamilyWrapper SearchFamily(String languages, int fromAge, int toAge) throws Exception;
+	
+// 	REST API: /user/userFacebookId/additem
+// 	HTTP verb: PUT
+	public WriteResult AddItem (String userFacebookId, Item newItem);
+		
+//	REST API: /user/userFacebookId/edititem
+//	HTTP verb: POST
+	public WriteResult EditItem (String userFacebookId, Item newItem);
+	
+//	REST API: /user/id/items?status=xx&type=yy
+//	HTTP verb: GET	
+	public ItemWrapper getItem (String userFacebookId, String status, String type);
+	
+	
+//	REST API: /user/id/deleteitem
+//	HTTP verb: DELETE	
+	public WriteResult DeleteItem(String userFacebookId, Item deleteItem);
+	
+//	REST API: /transaction
+//	HTTP verb: PUT
+	public void userTransaction(Transaction transaction) throws Exception;
+	
+//	REST API: /user/id/transaction
+//	HTTP verb: GET	
+	public List<Transaction> getTransaction(String userId) throws Exception;
+	
+//	REST API: /activity
+//	HTTP verb: PUT	
+	public void AddActivity(Activity activity) throws Exception;
+	
+//	REST API: /activity
+//	HTTP verb: POST
+	public WriteResult EditActivity(Activity updatedActivity);
+	
+//	REST API: /activity
+//	HTTP verb: DELETE
+	public void DeleteActivity(Activity deletedActivity) throws Exception;
+	
+//	REST API: /activity?location=48105&type=2&fromdate=2014-1-1&todate=2014-1-3
+//	HTTP verb: GET
+	//public List<Activity> getActivity(String type, String fromDate, String toDate);
+	
 }

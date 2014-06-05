@@ -20,8 +20,12 @@ public class Family {
 	private String familyName;
 	private Date createdDate;
 	private String description;
-	private List<User> member = new ArrayList<User>();
+	private List<User> members = new ArrayList<User>();
 	
+//	public void set_id(String _id) {
+//		this._id = _id;
+//	}
+
 	public String get_id() {
 		return _id;
 	}
@@ -74,12 +78,12 @@ public class Family {
 		this.description = description;
 	}
 
-	public List<User> getMember() {
-		return member;
+	public List<User> getMembers() {
+		return members;
 	}
 
-	public void setMember(List<User> member) {
-		this.member = member;
+	public void setMembers(List<User> member) {
+		this.members = member;
 	}
 	
 	

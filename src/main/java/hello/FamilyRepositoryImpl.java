@@ -10,6 +10,7 @@ import java.util.ListIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -27,34 +28,48 @@ public class FamilyRepositoryImpl implements FamilyRepositoryCustom {
 	
 //	REST API: /families
 //	HTTP verb: GET
-	public FamilyWrapper GetFamilies() throws Exception {
+	public List<Family> GetFamilies() throws Exception {
 		
-		return (new FamilyWrapper(mongoTemplate.findAll(Family.class, "Family")));
+		return (mongoTemplate.findAll(Family.class, "Family"));
 	}	
 	
 //	REST API: /family/id
 //	HTTP verb: GET
 	@Override
-	public SingleFamilyWrapper GetFamilyById(int id) throws Exception {
+	public Family GetFamilyById(int id) throws Exception {
 
 		Query myQuery = new Query();
 		myQuery.addCriteria(Criteria.where("id").is(id));
 		myQuery.fields().exclude("description");
 		myQuery.fields().exclude("members.facebookId");
-			
-		return (new SingleFamilyWrapper(mongoTemplate.findOne(myQuery, Family.class,"Family")));		
+		myQuery.fields().exclude("members.items");
+		
+		//String result = mongoTemplate.findOne(myQuery, String.class, "Family");
+		//System.out.println("Result = " + result); 
+		
+		//return (new SingleFamilyWrapper(mongoTemplate.findOne(myQuery, Family.class,"Family")));
+		return mongoTemplate.findOne(myQuery, Family.class, "Family");
+//		Query myQuery = new Query();
+//		myQuery.addCriteria(Criteria.where("id").is(id));
+//		myQuery.fields().exclude("description");
+//		myQuery.fields().exclude("members.facebookId");
+//		Family getFamily = mongoTemplate.findOne(myQuery, Family.class,"Family");
+//		DBObject getFamilyDBObject = (DBObject) mongoTemplate.getConverter().convertToMongoType(getFamily);
+
+//		return (new SingleFamilyWrapper(mongoTemplate.findOne(myQuery, Family.class,"Family")));			
+		
 	}		
 
 //	REST API: /family/id/edit
 //	HTTP verb: GET		
 	@Override
-	public SingleFamilyWrapper GetFamilyByIdEdit(int id) throws Exception {
+	public Family GetFamilyByIdEdit(int id) throws Exception {
 
 		Query myQuery = new Query();
 		myQuery.addCriteria(Criteria.where("id").is(id));
 		myQuery.fields().exclude("members");
 
-		return (new SingleFamilyWrapper(mongoTemplate.findOne(myQuery, Family.class,"Family")));		
+		return (mongoTemplate.findOne(myQuery, Family.class,"Family"));		
 	}		
 	
 	
@@ -164,7 +179,7 @@ public class FamilyRepositoryImpl implements FamilyRepositoryCustom {
 // Parameters : fromAge, toAge,languages
 // HTTP verb: GET	
 	@Override
-	public FamilyWrapper SearchFamily(String languages, int fromAge, int toAge) throws Exception{
+	public List<Family> SearchFamily(String languages, int fromAge, int toAge) throws Exception{
 			
 		Calendar cal = Calendar.getInstance();
 				
@@ -181,7 +196,7 @@ public class FamilyRepositoryImpl implements FamilyRepositoryCustom {
 		Criteria c = new Criteria().andOperator(Criteria.where("members.languages").is(languages),Criteria.where("members.birthday").gte(toDate),Criteria.where("members.birthday").lte(fromDate));
 		queryInFamily.addCriteria(c);
 
-		return (new FamilyWrapper(mongoTemplate.find(queryInFamily, Family.class, "Family")));
+		return (mongoTemplate.find(queryInFamily, Family.class, "Family"));
 	}
 	
 // REST API: /user/id/additem
@@ -255,7 +270,7 @@ public class FamilyRepositoryImpl implements FamilyRepositoryCustom {
 //	REST API: /user/id/items?status=xx&type=yy
 //	HTTP verb: GET	
 	@Override
-	public ItemWrapper getItem (String userFacebookId, String status, String type) {
+	public List<Item> getItem (String userFacebookId, String status, String type) {
 
 		// Retrieve items from the "Family" collection
 		Query QueryInFamily = new Query();
@@ -279,7 +294,7 @@ public class FamilyRepositoryImpl implements FamilyRepositoryCustom {
 			}
 		}
 		
-		return (new ItemWrapper(foundItems));				
+		return foundItems;				
 	}
 	
 //	REST API: /user/id/deleteitem
@@ -334,7 +349,7 @@ public class FamilyRepositoryImpl implements FamilyRepositoryCustom {
 
 //	REST API: /items
 //	HTTP verb: GET
-	public ItemWrapper GetItems() throws Exception {
+	public List<Item> GetItems() throws Exception {
 
 		List<Item> foundItems = new ArrayList<Item>();
 		List<Family> families = new ArrayList<Family>();
@@ -351,7 +366,7 @@ public class FamilyRepositoryImpl implements FamilyRepositoryCustom {
 			}
 		}
 		
-		return (new ItemWrapper(foundItems));					
+		return foundItems;					
 	}		
 	
 //	REST API: /transaction
@@ -433,9 +448,9 @@ public class FamilyRepositoryImpl implements FamilyRepositoryCustom {
 
 //	REST API: /activities
 //	HTTP verb: GET
-	public ActivityWrapper GetActivities() throws Exception{
+	public List<Activity> GetActivities() throws Exception{
 		
-		return  (new ActivityWrapper(mongoTemplate.findAll(Activity.class, "Activity")));
+		return  (mongoTemplate.findAll(Activity.class, "Activity"));
 	}	
 	
 }

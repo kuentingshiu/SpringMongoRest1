@@ -1,5 +1,6 @@
 package hello;
 
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 
@@ -19,5 +20,9 @@ public class MyConfig extends AbstractMongoConfiguration {
 		return new MongoClient("127.0.0.1");
 	}
 	
-	
+	// Register :  for Spring to output raw JSON
+//    @Override
+//    public CustomConversions customConversions() {
+//		return new CustomConversions(Arrays.asList(new DBObjectToStringConverter()));
+//	}
 }

@@ -1,6 +1,8 @@
 package hello;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,10 +25,12 @@ public class FamilyController {
 //	HTTP verb: GET
 	@RequestMapping(value = "/families", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public FamilyWrapper FindFamilies() {
+	public Map<String,List<Family>> FindFamilies() {
 		
-		try {
-			return myFamily.GetFamilies();
+		try {			
+			Map<String,List<Family>> responseBody = new HashMap<String,List<Family>>();
+			responseBody.put("Families", myFamily.GetFamilies());
+			return responseBody;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,10 +43,11 @@ public class FamilyController {
 //	HTTP verb: GET
 	@RequestMapping(value = "/items", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ItemWrapper FindItems() {
-		
+	public Map<String,List<Item>> FindItems() {		
 		try {
-			return myFamily.GetItems();
+			Map<String,List<Item>> responseBody = new HashMap<String,List<Item>>();
+			responseBody.put("Items", myFamily.GetItems());
+			return responseBody;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,10 +60,12 @@ public class FamilyController {
 //	HTTP verb: GET
 	@RequestMapping(value = "/activities", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ActivityWrapper FindActivities() {
+	public Map<String,List<Activity>> FindActivities() {
 		
 		try {
-			return myFamily.GetActivities();
+			Map<String,List<Activity>> responseBody = new HashMap<String,List<Activity>>();
+			responseBody.put("Activities", myFamily.GetActivities());
+			return responseBody;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,10 +79,14 @@ public class FamilyController {
 //	HTTP verb: GET
 	@RequestMapping(value = "/families/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public SingleFamilyWrapper FindByFamilyId(@PathVariable("id") int id) {
+	public Map<String,Family> FindByFamilyId(@PathVariable("id") int id) {
 		
 		try {
-			return myFamily.GetFamilyById(id);
+			//return "Family:{" + myFamily.GetFamilyById(id) + "}";
+			Map<String,Family> responseBody = new HashMap<String,Family>();
+			responseBody.put("Family", myFamily.GetFamilyById(id));
+			return responseBody;
+			//return myFamily.GetFamilyById(id);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,10 +117,12 @@ public class FamilyController {
 //	HTTP verb: GET
 	@RequestMapping(value = "/families/{id}/edit", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public SingleFamilyWrapper FindByFamilyEditId(@PathVariable("id") int id) {
+	public Map<String,Family> FindByFamilyEditId(@PathVariable("id") int id) {
 		
 		try {
-			return myFamily.GetFamilyByIdEdit(id);
+			Map<String,Family> responseBody = new HashMap<String,Family>();
+			responseBody.put("Family", myFamily.GetFamilyByIdEdit(id));
+			return responseBody;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -214,12 +227,14 @@ public class FamilyController {
 // HTTP verb: GET		
 	@RequestMapping (value = "/families/searchfamily", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public FamilyWrapper SearchFamily(@RequestParam(value = "languages") String languages, 
+	public Map<String,List<Family>> SearchFamily(@RequestParam(value = "languages") String languages, 
 								     @RequestParam(value = "fromAge") int fromAge, 
 								     @RequestParam(value = "toAge") int toAge) {
 		
 		try {
-			return myFamily.SearchFamily(languages,fromAge, toAge);
+			Map<String,List<Family>> responseBody = new HashMap<String,List<Family>>();
+			responseBody.put("Families", myFamily.SearchFamily(languages,fromAge, toAge));
+			return responseBody;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -261,11 +276,13 @@ public class FamilyController {
 //	REST API: /user/id/items?status=xx&type=yy
 //	HTTP verb: GET
 	@RequestMapping(value="/user/{userFacebookId}/items", method = RequestMethod.GET, produces = "application/json")
-	public @ResponseBody ItemWrapper getItems(@PathVariable("userFacebookId") String userFacebookId,
+	public @ResponseBody Map<String,List<Item>> getItems(@PathVariable("userFacebookId") String userFacebookId,
 											 @RequestParam (value="status", required=false) String status,
 											 @RequestParam (value="type", required=false) String type
 											) {
-		return myFamily.getItem(userFacebookId, status, type);
+		Map<String,List<Item>> responseBody = new HashMap<String,List<Item>>();
+		responseBody.put("Items", myFamily.getItem(userFacebookId, status, type));
+		return responseBody;
 	}
 	
 //	REST API: /user/id/deleteitem

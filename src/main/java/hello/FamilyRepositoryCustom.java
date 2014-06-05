@@ -11,23 +11,23 @@ public interface FamilyRepositoryCustom {
 
 //	REST API: /activities
 //	HTTP verb: GET
-	public ActivityWrapper GetActivities() throws Exception;		
+	public List<Activity> GetActivities() throws Exception;		
 	
 //	REST API: /items
 //	HTTP verb: GET
-	public ItemWrapper GetItems() throws Exception;	
+	public List<Item> GetItems() throws Exception;	
 	
 //	REST API: /families
 //	HTTP verb: GET
-	public FamilyWrapper GetFamilies() throws Exception;
+	public List<Family> GetFamilies() throws Exception;
 	
 //	REST API: /family/id
 //	HTTP verb: GET
-	public SingleFamilyWrapper GetFamilyById(int id) throws Exception;
+	public Family GetFamilyById(int id) throws Exception;
 	
 //	REST API: /family/id/edit
 //	HTTP verb: GET	
-	public SingleFamilyWrapper GetFamilyByIdEdit(int id) throws Exception;	
+	public Family GetFamilyByIdEdit(int id) throws Exception;	
 
 //	REST API: /addfamily
 //	HTTP verb: PUT
@@ -55,7 +55,7 @@ public interface FamilyRepositoryCustom {
 	
 // REST API : /family/searchfamily/languages=chinese&fromAge=2&toAge=5
 // HTTP verb: GET		
-	public FamilyWrapper SearchFamily(String languages, int fromAge, int toAge) throws Exception;
+	public List<Family> SearchFamily(String languages, int fromAge, int toAge) throws Exception;
 	
 // 	REST API: /user/userFacebookId/additem
 // 	HTTP verb: PUT
@@ -67,7 +67,7 @@ public interface FamilyRepositoryCustom {
 	
 //	REST API: /user/id/items?status=xx&type=yy
 //	HTTP verb: GET	
-	public ItemWrapper getItem (String userFacebookId, String status, String type);
+	public List<Item> getItem (String userFacebookId, String status, String type);
 	
 	
 //	REST API: /user/id/deleteitem
